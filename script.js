@@ -19,7 +19,7 @@ const products = catalog.map((p,i)=>{
   const specificTags = `${photoSlug(p.name)},${photoTags[p.category] || "electronic-product"}`;
   return {
     ...p,id:i+1,moq:Math.max(5,Math.ceil((p.price>1500?2:10))),
-    image:`https://loremflickr.com/720/540/${specificTags}?lock=${i+3101}`,
+    image:photoUrl(categoryPhotos[p.category] || categoryPhotos.smart,720),
     imageSearch:`https://www.google.com/search?tbm=isch&q=${encodeURIComponent(p.name+" product photo")}`
   };
 });
@@ -28,10 +28,23 @@ let activeCategory = "__none__";
 const money = n => "৳" + Number(n).toLocaleString("bn-BD");
 const grid = document.getElementById("productGrid");
 const categories = Array.from(new Map(products.map(p=>[p.category,{id:p.category,label:p.label,emoji:p.emoji}])).values());
-document.getElementById("categoryGrid").innerHTML=categories.map((c)=>`<button class="category-card" data-category="${c.id}"><span class="cat-icon">${c.emoji}</span><b>${c.label}</b><small>${products.filter(p=>p.category===c.id).length}টি পণ্য</small></button>`).join("");
+const categoryPhotos = {
+ lighting:"photo-1507473885765-e6ed057f782c", switches:"photo-1558002038-1055907df827",
+ wire:"photo-1558618666-fcd25c85cd64", protection:"photo-1581092160562-40aa08e78837",
+ fans:"photo-1558008258-3256797b43f3", lightingparts:"photo-1513506003901-1e6a229e2d15",
+ tools:"photo-1581147036324-c1c89c2c8b5c", connectors:"photo-1518770660439-4636190af475",
+ audio:"photo-1593078166032-c10d3b3a4c8a", computer:"photo-1498049794561-7780e7231661",
+ power:"photo-1609592806596-b43bada9f4b5", security:"photo-1557597774-9d273605dfa9",
+ solar:"photo-1509391366360-2e959784a276", kitchen:"photo-1556911220-e15b29be8c8f",
+ accessories:"photo-1583863788434-e58a36330cf0", smart:"photo-1519389950473-47ba0277781c"
+};
+const photoUrl = (id,w=720) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=82`;
+document.getElementById("categoryGrid").innerHTML=categories.map((c)=>`<button class="category-card" data-category="${c.id}"><img class="category-photo" loading="lazy" src="${photoUrl(categoryPhotos[c.id] || categoryPhotos.smart,640)}" alt="${c.label}" onerror="this.style.display='none'"><b>${c.label}</b><small>${products.filter(p=>p.category===c.id).length}টি পণ্য</small></button>`).join("");
 // Inventory is intentionally unconfigured until the store owner enters verified quantities.
 // Set STOCK_QTY product IDs to real quantities; e.g. {1: 25, 2: 0}.
-const STOCK_QTY = {};
+const STOCK_STORAGE_KEY = "electrohub_stock_v1";
+let STOCK_QTY = {};
+try { STOCK_QTY = JSON.parse(localStorage.getItem(STOCK_STORAGE_KEY) || "{}") || {}; } catch(e) { STOCK_QTY = {}; }
 function stockInfo(product){
  const qty = Object.prototype.hasOwnProperty.call(STOCK_QTY, product.id) ? Number(STOCK_QTY[product.id]) : null;
  if(qty === null || !Number.isFinite(qty)) return {label:"স্টক যাচাই সাপেক্ষে",cls:"stock-unknown",qty:null};
@@ -104,3 +117,70 @@ if(document.body.classList.contains("catalog-page")){
  history.replaceState({view:"categories"},"","#categories");
  window.addEventListener("popstate",()=>{const section=document.getElementById("products");if(section&&!section.hidden){section.hidden=true;document.getElementById("categories").scrollIntoView({behavior:"smooth"});history.pushState({view:"categories"},"","#categories");}});
 }
+
+
+// ElectroHub loading experience: show feedback for navigation and interactive actions.
+(function initPageLoader(){
+ const loader=document.getElementById("pageLoader");
+ if(!loader) return;
+ let hideTimer=null;
+ const show=()=>{clearTimeout(hideTimer);loader.classList.add("is-visible");};
+ const hide=(delay=420)=>{clearTimeout(hideTimer);hideTimer=setTimeout(()=>loader.classList.remove("is-visible"),delay);};
+ window.addEventListener("pageshow",()=>hide(180));
+ document.addEventListener("click",event=>{
+   const target=event.target.closest("a,button,[role='button']");
+   if(!target || target.disabled) return;
+   const href=target.getAttribute("href");
+   if(target.tagName==="A" && href && !href.startsWith("#") && !href.startsWith("mailto:") && !href.startsWith("tel:") && !href.startsWith("javascript:")){
+     const url=new URL(href,location.href);
+     if(url.origin===location.origin){
+       event.preventDefault();show();
+       setTimeout(()=>{location.href=url.href;},360);
+       return;
+     }
+   }
+   show();hide(520);
+ },true);
+ document.addEventListener("submit",()=>{show();hide(900);},true);
+ window.addEventListener("beforeunload",show);
+})();
+
+
+// Local stock manager: quantities are saved in this browser/device.
+(function initInventoryManager(){
+ const rows=document.getElementById("inventoryRows");
+ if(!rows) return;
+ const search=document.getElementById("inventorySearch");
+ const feedback=document.getElementById("inventoryFeedback");
+ const summary=document.getElementById("inventorySummary");
+ const getQty=(p)=>Object.prototype.hasOwnProperty.call(STOCK_QTY,p.id)?STOCK_QTY[p.id]:"";
+ function draw(){
+   const q=(search.value||"").trim().toLowerCase();
+   const list=products.filter(p=>p.bn.toLowerCase().includes(q)||p.name.toLowerCase().includes(q)||p.label.toLowerCase().includes(q));
+   const available=products.filter(p=>Number(STOCK_QTY[p.id])>0).length;
+   const unavailable=products.filter(p=>Object.prototype.hasOwnProperty.call(STOCK_QTY,p.id)&&Number(STOCK_QTY[p.id])<=0).length;
+   const unknown=products.length-available-unavailable;
+   summary.innerHTML=`<span>মোট পণ্য: ${products.length}</span><span>স্টকে আছে: ${available}</span><span>স্টকে নেই: ${unavailable}</span><span>যাচাই বাকি: ${unknown}</span>`;
+   rows.innerHTML=list.map(p=>{const v=getQty(p);const status=v===""?"যাচাই বাকি":Number(v)>0?`স্টকে আছে · ${Number(v)} পিস`:"স্টকে নেই";return `<div class="inventory-row"><div><b>${p.bn}</b><small>${p.name} · ${p.label}</small></div><label><small>স্টক পরিমাণ (পিস)</small><input type="number" min="0" step="1" inputmode="numeric" data-stock-id="${p.id}" value="${v}" placeholder="পরিমাণ লিখুন"></label><span class="inventory-status">${status}</span></div>`}).join("");
+ }
+ function save(){
+   const next={...STOCK_QTY};
+   rows.querySelectorAll("[data-stock-id]").forEach(input=>{
+     const raw=input.value.trim(), id=input.dataset.stockId;
+     if(raw===""){delete next[id];return;}
+     const n=Number(raw);
+     if(Number.isInteger(n)&&n>=0) next[id]=n;
+   });
+   STOCK_QTY=next;
+   try{localStorage.setItem(STOCK_STORAGE_KEY,JSON.stringify(STOCK_QTY));feedback.textContent="স্টকের তথ্য এই ডিভাইসে সংরক্ষণ হয়েছে।";draw();if(typeof renderProducts==="function")renderProducts();}
+   catch(e){feedback.textContent="সংরক্ষণ করা যায়নি—ব্রাউজারের স্টোরেজ পরীক্ষা করুন।";}
+ }
+ search.addEventListener("input",draw);
+ document.getElementById("saveInventory").addEventListener("click",save);
+ document.getElementById("exportInventory").addEventListener("click",()=>{
+   const report=products.map(p=>({product:p.bn,english:p.name,category:p.label,quantity:Object.prototype.hasOwnProperty.call(STOCK_QTY,p.id)?Number(STOCK_QTY[p.id]):null,status:!Object.prototype.hasOwnProperty.call(STOCK_QTY,p.id)?"যাচাই বাকি":Number(STOCK_QTY[p.id])>0?"স্টকে আছে":"স্টকে নেই"}));
+   const blob=new Blob(["\uFEFF"+["পণ্য,ইংরেজি নাম,ক্যাটাগরি,পরিমাণ,অবস্থা",...report.map(r=>[r.product,r.english,r.category,r.quantity??"",r.status].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(","))].join("\n")],{type:"text/csv;charset=utf-8"});
+   const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="ElectroHub-Stock-Report.csv";a.click();URL.revokeObjectURL(url);
+ });
+ draw();
+})();

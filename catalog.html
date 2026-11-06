@@ -18,7 +18,7 @@
   <header class="header">
     <a class="brand" href="#"><span class="brand-mark">E</span><span>Electro<span class="brand-accent">Hub</span><small>WHOLESALE STORE</small></span></a>
     <nav class="nav" id="nav">
-      <a href="#home">হোম</a><a href="catalog.html">স্মার্ট ক্যাটালগ</a><a href="#categories">ক্যাটাগরি</a><a href="#products">পণ্যসমূহ</a><a href="#about">আমাদের সম্পর্কে</a><a href="#contact">যোগাযোগ</a>
+      <a href="#home">হোম</a><a href="catalog.html">স্মার্ট ক্যাটালগ</a><a href="#categories">ক্যাটাগরি</a><a href="#products">পণ্যসমূহ</a><a href="#about">আমাদের সম্পর্কে</a><a href="#contact">যোগাযোগ</a><a href="#inventory">স্টক ম্যানেজমেন্ট</a>
     </nav>
     <div class="header-actions"><button class="icon-btn" id="cartToggle" aria-label="কার্ট">🛒 <span id="cartCount">0</span></button><button class="menu-btn" id="menuToggle">☰</button><a class="btn btn-small" href="#contact">পাইকারি কোটেশন</a></div>
   </header>
@@ -79,7 +79,21 @@
       </div></div>
       <form id="quoteForm" class="quote-form"><h3>কোটেশন / যোগাযোগ</h3><label>আপনার নাম<input name="name" required placeholder="নাম লিখুন"></label><label>ফোন নম্বর<input name="phone" required placeholder="01XXXXXXXXX"></label><label>আপনার ইমেইল (ঐচ্ছিক)<input type="email" name="email" placeholder="আপনার ইমেইল ঠিকানা"></label><label>ডেলিভারি লোকেশন<input name="location" placeholder="জেলা / উপজেলা"></label><label>আপনার প্রয়োজন<textarea name="message" rows="4" placeholder="পণ্যের নাম, পরিমাণ ও অন্যান্য তথ্য"></textarea></label><label>যেভাবে যোগাযোগ চান<select name="contactMethod"><option value="whatsapp">WhatsApp</option><option value="email">ইমেইল</option></select></label><button class="btn" type="submit">অনুরোধ পাঠান ↗</button><a class="imo-form-link" href="https://imo.im/" target="_blank" rel="noopener">IMO অ্যাপ খুলুন · 01975805326</a><small>WhatsApp নির্বাচন করলে মেসেজ তৈরি হবে। ইমেইল নির্বাচন করলে আপনার মেইল অ্যাপে খসড়া খুলবে।</small></form>
     </section>
-  </main>
+  
+    <section class="section inventory-section" id="inventory">
+      <div class="section-heading"><div><div class="eyebrow">PRIVATE STORE TOOL</div><h2>স্টক <em>ম্যানেজমেন্ট</em></h2></div><p>প্রতিটি পণ্যের প্রকৃত পরিমাণ লিখে সংরক্ষণ করুন।</p></div>
+      <div class="inventory-toolbar">
+        <input id="inventorySearch" type="search" placeholder="স্টক তালিকায় পণ্য খুঁজুন...">
+        <button class="btn" id="saveInventory" type="button">স্টক সংরক্ষণ করুন</button>
+        <button class="btn btn-ghost" id="exportInventory" type="button">স্টক রিপোর্ট ডাউনলোড</button>
+      </div>
+      <p class="inventory-note">নতুন পণ্যের স্টক প্রথমবার সেট না করা পর্যন্ত “স্টক যাচাই সাপেক্ষে” দেখাবে। ০ দিলে “স্টকে নেই”, ১ বা তার বেশি দিলে “স্টকে আছে” দেখাবে।</p>
+      <div id="inventorySummary" class="inventory-summary"></div>
+      <div id="inventoryRows" class="inventory-rows"></div>
+      <div id="inventoryFeedback" class="inventory-feedback" role="status"></div>
+    </section>
+
+</main>
 
   <footer><a class="brand" href="#"><span class="brand-mark">E</span><span>Electro<span class="brand-accent">Hub</span><small>WHOLESALE STORE</small></span></a><p>© <span id="year"></span> ElectroHub Wholesale. All rights reserved.</p><a href="#home">উপরে যান ↑</a></footer>
 
