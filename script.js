@@ -15,6 +15,18 @@ const photoTags = {
 };
 const photoSlug = value => value.toLowerCase()
   .normalize("NFKD").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const categoryPhotos = {
+ lighting:"photo-1507473885765-e6ed057f782c", switches:"photo-1558002038-1055907df827",
+ wire:"photo-1558618666-fcd25c85cd64", protection:"photo-1581092160562-40aa08e78837",
+ fans:"photo-1558008258-3256797b43f3", lightingparts:"photo-1513506003901-1e6a229e2d15",
+ tools:"photo-1581147036324-c1c89c2c8b5c", connectors:"photo-1518770660439-4636190af475",
+ audio:"photo-1593078166032-c10d3b3a4c8a", computer:"photo-1498049794561-7780e7231661",
+ power:"photo-1609592806596-b43bada9f4b5", security:"photo-1557597774-9d273605dfa9",
+ solar:"photo-1509391366360-2e959784a276", kitchen:"photo-1556911220-e15b29be8c8f",
+ accessories:"photo-1583863788434-e58a36330cf0", smart:"photo-1519389950473-47ba0277781c"
+};
+const photoUrl = (id,w=720) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=82`;
+
 const products = catalog.map((p,i)=>{
   const specificTags = `${photoSlug(p.name)},${photoTags[p.category] || "electronic-product"}`;
   return {
@@ -28,17 +40,6 @@ let activeCategory = "__none__";
 const money = n => "৳" + Number(n).toLocaleString("bn-BD");
 const grid = document.getElementById("productGrid");
 const categories = Array.from(new Map(products.map(p=>[p.category,{id:p.category,label:p.label,emoji:p.emoji}])).values());
-const categoryPhotos = {
- lighting:"photo-1507473885765-e6ed057f782c", switches:"photo-1558002038-1055907df827",
- wire:"photo-1558618666-fcd25c85cd64", protection:"photo-1581092160562-40aa08e78837",
- fans:"photo-1558008258-3256797b43f3", lightingparts:"photo-1513506003901-1e6a229e2d15",
- tools:"photo-1581147036324-c1c89c2c8b5c", connectors:"photo-1518770660439-4636190af475",
- audio:"photo-1593078166032-c10d3b3a4c8a", computer:"photo-1498049794561-7780e7231661",
- power:"photo-1609592806596-b43bada9f4b5", security:"photo-1557597774-9d273605dfa9",
- solar:"photo-1509391366360-2e959784a276", kitchen:"photo-1556911220-e15b29be8c8f",
- accessories:"photo-1583863788434-e58a36330cf0", smart:"photo-1519389950473-47ba0277781c"
-};
-const photoUrl = (id,w=720) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=82`;
 document.getElementById("categoryGrid").innerHTML=categories.map((c)=>`<button class="category-card" data-category="${c.id}"><img class="category-photo" loading="lazy" src="${photoUrl(categoryPhotos[c.id] || categoryPhotos.smart,640)}" alt="${c.label}" onerror="this.style.display='none'"><b>${c.label}</b><small>${products.filter(p=>p.category===c.id).length}টি পণ্য</small></button>`).join("");
 // Inventory is intentionally unconfigured until the store owner enters verified quantities.
 // Set STOCK_QTY product IDs to real quantities; e.g. {1: 25, 2: 0}.
