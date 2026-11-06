@@ -24,23 +24,32 @@ const products = catalog.map((p,i)=>{
   };
 });
 let cart = [];
-let activeCategory = document.body.classList.contains("catalog-page") ? "__none__" : "all";
+let activeCategory = "__none__";
 const money = n => "৳" + Number(n).toLocaleString("bn-BD");
 const grid = document.getElementById("productGrid");
-const categories = [{id:"all",label:"সব পণ্য",emoji:"▦"},...Array.from(new Map(products.map(p=>[p.category,{id:p.category,label:p.label,emoji:p.emoji}])).values())];
-document.getElementById("categoryGrid").innerHTML=categories.map((c,i)=>`<button class="category-card ${(!document.body.classList.contains("catalog-page") && i===0)?"active":""}" data-category="${c.id}"><span class="cat-icon">${c.emoji}</span><b>${c.label}</b><small>${c.id==="all"?products.length+"টি পণ্য":products.filter(p=>p.category===c.id).length+"টি পণ্য"}</small></button>`).join("");
+const categories = Array.from(new Map(products.map(p=>[p.category,{id:p.category,label:p.label,emoji:p.emoji}])).values());
+document.getElementById("categoryGrid").innerHTML=categories.map((c)=>`<button class="category-card" data-category="${c.id}"><span class="cat-icon">${c.emoji}</span><b>${c.label}</b><small>${products.filter(p=>p.category===c.id).length}টি পণ্য</small></button>`).join("");
+// Inventory is intentionally unconfigured until the store owner enters verified quantities.
+// Set STOCK_QTY product IDs to real quantities; e.g. {1: 25, 2: 0}.
+const STOCK_QTY = {};
+function stockInfo(product){
+ const qty = Object.prototype.hasOwnProperty.call(STOCK_QTY, product.id) ? Number(STOCK_QTY[product.id]) : null;
+ if(qty === null || !Number.isFinite(qty)) return {label:"স্টক যাচাই সাপেক্ষে",cls:"stock-unknown",qty:null};
+ if(qty <= 0) return {label:"স্টকে নেই",cls:"stock-out",qty:0};
+ return {label:`স্টকে আছে · ${qty} পিস`,cls:"stock-in",qty};
+}
 function renderProducts(){
  const q=document.getElementById("searchInput").value.trim().toLowerCase();
- let list=products.filter(p=>(activeCategory==="all"||p.category===activeCategory)&&(p.name.toLowerCase().includes(q)||p.bn.toLowerCase().includes(q)||p.label.toLowerCase().includes(q)));
+ let list=products.filter(p=>(activeCategory!=="__none__" && p.category===activeCategory)&&(p.name.toLowerCase().includes(q)||p.bn.toLowerCase().includes(q)||p.label.toLowerCase().includes(q)));
  const sort=document.getElementById("sortSelect").value;
  if(sort==="low")list.sort((a,b)=>a.price-b.price); if(sort==="high")list.sort((a,b)=>b.price-a.price);
  document.getElementById("productCount").textContent=`${list.length.toLocaleString("bn-BD")}টি পণ্য পাওয়া গেছে`;
- grid.innerHTML=list.length?list.map(p=>`<article class="product-card">
+ grid.innerHTML=list.length?list.map(p=>{const stock=stockInfo(p);return `<article class="product-card">
  <div class="product-art"><span class="product-badge">পাইকারি · MOQ ${p.moq}</span><img class="product-photo" loading="lazy" src="${p.image}" alt="${p.bn} / ${p.name}" title="${p.bn}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="product-emoji" style="display:none">${p.emoji}</span><a class="image-search-link" href="${p.imageSearch}" target="_blank" rel="noopener">ছবি দেখুন ↗</a></div>
- <div class="product-info"><small>${p.name}</small><h3>${p.bn}</h3><div class="product-meta"><span>${p.label}</span><span>ন্যূনতম ${p.moq} পিস</span></div>
- <div class="price-row"><strong>${money(p.price)} <small>/ নমুনা</small></strong><button onclick="addToCart(${p.id})">+ কার্টে</button></div></div></article>`).join(""):"<p>কোনো পণ্য পাওয়া যায়নি।</p>";
+ <div class="product-info"><small>${p.name}</small><h3>${p.bn}</h3><div class="product-meta"><span>${p.label}</span><span>ন্যূনতম ${p.moq} পিস</span></div><div class="stock-line ${stock.cls}"><span class="stock-dot"></span>${stock.label}</div>
+ <div class="price-row"><strong>${money(p.price)} <small>/ নমুনা</small></strong><button ${stock.qty===0?"disabled":""} onclick="addToCart(${p.id})">${stock.qty===0?"স্টকে নেই":"+ কার্টে"}</button></div></div></article>`}).join(""):"<p>কোনো পণ্য পাওয়া যায়নি।</p>";
 }
-function addToCart(id){const p=products.find(x=>x.id===id);const item=cart.find(x=>x.id===id);item?item.qty+=p.moq:cart.push({id,qty:p.moq});renderCart();openCart();}
+function addToCart(id){const p=products.find(x=>x.id===id);if(stockInfo(p).qty===0){alert("এই পণ্যটি বর্তমানে স্টকে নেই।");return;}const item=cart.find(x=>x.id===id);item?item.qty+=p.moq:cart.push({id,qty:p.moq});renderCart();openCart();}
 function changeQty(id,delta){const item=cart.find(x=>x.id===id);if(!item)return;item.qty=Math.max(0,item.qty+delta);if(!item.qty)cart=cart.filter(x=>x.id!==id);renderCart();}
 function renderCart(){
  const count=cart.reduce((s,x)=>s+x.qty,0),total=cart.reduce((s,x)=>s+x.qty*products.find(p=>p.id===x.id).price,0);
@@ -54,11 +63,9 @@ document.querySelectorAll(".category-card").forEach(btn=>btn.addEventListener("c
  document.querySelectorAll(".category-card").forEach(x=>x.classList.remove("active"));
  btn.classList.add("active"); activeCategory=btn.dataset.category; renderProducts();
  const section=document.getElementById("products");
- if(document.body.classList.contains("catalog-page")) {
-   section.hidden=false;
-   document.getElementById("selectedCategoryTitle").textContent=btn.querySelector("b").textContent;
-   section.scrollIntoView({behavior:"smooth",block:"start"});
- }
+ section.hidden=false;
+ document.getElementById("selectedCategoryTitle").textContent=btn.querySelector("b").textContent;
+ section.scrollIntoView({behavior:"smooth",block:"start"});
 }));
 const backCategories=document.getElementById("backToCategories");
 if(backCategories) backCategories.addEventListener("click",()=>{
@@ -90,7 +97,7 @@ ElectroHub Wholesale`;
 });
 document.getElementById("menuToggle").addEventListener("click",()=>document.getElementById("nav").classList.toggle("open"));
 document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",()=>document.getElementById("nav").classList.remove("open")));
-document.getElementById("year").textContent=new Date().getFullYear();renderProducts();renderCart();
+document.getElementById("year").textContent=new Date().getFullYear();renderCart();
 
 // Native browser back navigation: restore the category chooser on the dedicated catalogue page.
 if(document.body.classList.contains("catalog-page")){

@@ -93,3 +93,12 @@
  .catalog-toolbar{flex-wrap:wrap}
  .catalog-toolbar .btn{padding:10px 13px}
 }
+
+/* Verified inventory status */
+.stock-line{display:flex;align-items:center;gap:8px;margin:12px 0 2px;padding:8px 10px;border-radius:10px;font-size:12px;font-weight:700;background:#f1f5f9;color:#475569}
+.stock-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.stock-in{background:#e8f8ef;color:#137a43}
+.stock-out{background:#fff0f0;color:#b42318}
+.stock-unknown{background:#fff7e6;color:#9a6700}
+.price-row button:disabled{opacity:.55;cursor:not-allowed;background:#94a3b8}
+.products-section[hidden]{display:none!important}
