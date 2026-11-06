@@ -65,3 +65,31 @@
 .quick-email{background:#315cff}
 .quick-contact{flex-wrap:wrap;justify-content:flex-end}
 @media(max-width:420px){.quick-contact{gap:6px}.quick-contact a{padding:10px 12px;font-size:11px}}
+
+/* Smart category-first catalogue and premium 3D interface */
+.category-card{transform-style:preserve-3d;box-shadow:0 7px 0 #dce4f4,0 13px 25px #172d5010;position:relative}
+.category-card:hover,.category-card.active{transform:translateY(-7px) rotateX(4deg);box-shadow:0 8px 0 #b8c9f2,0 20px 32px #2449a025}
+.cat-icon{box-shadow:inset 3px 3px 8px #fff,4px 6px 12px #315cff20;transform:translateZ(12px)}
+.product-card{transform-style:preserve-3d}
+.product-card:hover{transform:translateY(-8px) rotateX(2deg) rotateY(-1deg)}
+.product-art{background:linear-gradient(145deg,#eaf1ff,#fff 55%,#dce7f8)}
+.product-photo{filter:drop-shadow(0 12px 12px #172d5020)}
+.catalog-page .hero,.catalog-page .stats,.catalog-page #about,.catalog-page .process,.catalog-page #contact{display:none}
+.catalog-page .catalog-intro{padding:65px 8% 25px;background:radial-gradient(ellipse at 80% 20%,#dceaff,#f8faff 48%,#fff)}
+.catalog-intro h1{font-size:clamp(32px,4vw,52px);margin:15px 0 10px;line-height:1.2}
+.catalog-intro h1 em{color:var(--blue);font-style:normal}
+.catalog-intro p{color:var(--muted);max-width:700px;line-height:1.8}
+.catalog-tools-hint{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.catalog-tools-hint span{padding:10px 15px;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:0 5px 0 #e6ebf5,0 9px 20px #172d5010;font-size:13px}
+.catalog-page #products[hidden]{display:none!important}
+.catalog-toolbar{display:flex;gap:10px;margin-bottom:25px}
+.catalog-page #categories{padding-top:40px}
+.catalog-page .category-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.catalog-page .category-card{min-height:145px}
+.catalog-page .contact-section{display:none}
+@media(max-width:760px){
+ .catalog-page .catalog-intro{padding:45px 6% 15px}
+ .catalog-page .category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .catalog-toolbar{flex-wrap:wrap}
+ .catalog-toolbar .btn{padding:10px 13px}
+}

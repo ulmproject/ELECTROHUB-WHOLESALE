@@ -24,11 +24,11 @@ const products = catalog.map((p,i)=>{
   };
 });
 let cart = [];
-let activeCategory = "all";
+let activeCategory = document.body.classList.contains("catalog-page") ? "__none__" : "all";
 const money = n => "৳" + Number(n).toLocaleString("bn-BD");
 const grid = document.getElementById("productGrid");
 const categories = [{id:"all",label:"সব পণ্য",emoji:"▦"},...Array.from(new Map(products.map(p=>[p.category,{id:p.category,label:p.label,emoji:p.emoji}])).values())];
-document.getElementById("categoryGrid").innerHTML=categories.map((c,i)=>`<button class="category-card ${i===0?"active":""}" data-category="${c.id}"><span class="cat-icon">${c.emoji}</span><b>${c.label}</b><small>${c.id==="all"?products.length+"টি পণ্য":products.filter(p=>p.category===c.id).length+"টি পণ্য"}</small></button>`).join("");
+document.getElementById("categoryGrid").innerHTML=categories.map((c,i)=>`<button class="category-card ${(!document.body.classList.contains("catalog-page") && i===0)?"active":""}" data-category="${c.id}"><span class="cat-icon">${c.emoji}</span><b>${c.label}</b><small>${c.id==="all"?products.length+"টি পণ্য":products.filter(p=>p.category===c.id).length+"টি পণ্য"}</small></button>`).join("");
 function renderProducts(){
  const q=document.getElementById("searchInput").value.trim().toLowerCase();
  let list=products.filter(p=>(activeCategory==="all"||p.category===activeCategory)&&(p.name.toLowerCase().includes(q)||p.bn.toLowerCase().includes(q)||p.label.toLowerCase().includes(q)));
@@ -50,7 +50,21 @@ function renderCart(){
 function openCart(){document.getElementById("cartDrawer").classList.add("open");document.getElementById("overlay").classList.add("show")}
 function closeCart(){document.getElementById("cartDrawer").classList.remove("open");document.getElementById("overlay").classList.remove("show")}
 function sendWhatsApp(message){if(!/^8801[0-9]{9}$/.test(WHATSAPP_NUMBER)){alert("WhatsApp নম্বরটি সঠিকভাবে সেট করা নেই।");return;}window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,"_blank");}
-document.querySelectorAll(".category-card").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".category-card").forEach(x=>x.classList.remove("active"));btn.classList.add("active");activeCategory=btn.dataset.category;renderProducts();}));
+document.querySelectorAll(".category-card").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll(".category-card").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active"); activeCategory=btn.dataset.category; renderProducts();
+ const section=document.getElementById("products");
+ if(document.body.classList.contains("catalog-page")) {
+   section.hidden=false;
+   document.getElementById("selectedCategoryTitle").textContent=btn.querySelector("b").textContent;
+   section.scrollIntoView({behavior:"smooth",block:"start"});
+ }
+}));
+const backCategories=document.getElementById("backToCategories");
+if(backCategories) backCategories.addEventListener("click",()=>{
+ document.getElementById("products").hidden=true;
+ document.getElementById("categories").scrollIntoView({behavior:"smooth",block:"start"});
+});
 document.getElementById("searchInput").addEventListener("input",renderProducts);document.getElementById("sortSelect").addEventListener("change",renderProducts);
 document.getElementById("cartToggle").addEventListener("click",openCart);document.getElementById("cartClose").addEventListener("click",closeCart);document.getElementById("overlay").addEventListener("click",closeCart);
 document.getElementById("whatsappOrder").addEventListener("click",()=>{if(!cart.length){alert("আপনার কার্টে পণ্য যোগ করুন।");return;}const lines=cart.map(x=>{const p=products.find(z=>z.id===x.id);return `${p.bn} / ${p.name} - ${x.qty} পিস`;});sendWhatsApp("আসসালামু আলাইকুম, আমি পাইকারি অর্ডার করতে চাই:\\n"+lines.join("\\n")+"\\n\\nঅনুগ্রহ করে চূড়ান্ত পাইকারি মূল্য, স্টক ও ডেলিভারি চার্জ নিশ্চিত করবেন।");});
@@ -77,3 +91,9 @@ ElectroHub Wholesale`;
 document.getElementById("menuToggle").addEventListener("click",()=>document.getElementById("nav").classList.toggle("open"));
 document.querySelectorAll(".nav a").forEach(a=>a.addEventListener("click",()=>document.getElementById("nav").classList.remove("open")));
 document.getElementById("year").textContent=new Date().getFullYear();renderProducts();renderCart();
+
+// Native browser back navigation: restore the category chooser on the dedicated catalogue page.
+if(document.body.classList.contains("catalog-page")){
+ history.replaceState({view:"categories"},"","#categories");
+ window.addEventListener("popstate",()=>{const section=document.getElementById("products");if(section&&!section.hidden){section.hidden=true;document.getElementById("categories").scrollIntoView({behavior:"smooth"});history.pushState({view:"categories"},"","#categories");}});
+}

@@ -18,7 +18,7 @@
   <header class="header">
     <a class="brand" href="#"><span class="brand-mark">E</span><span>Electro<span class="brand-accent">Hub</span><small>WHOLESALE STORE</small></span></a>
     <nav class="nav" id="nav">
-      <a href="#home">হোম</a><a href="#categories">ক্যাটাগরি</a><a href="#products">পণ্যসমূহ</a><a href="#about">আমাদের সম্পর্কে</a><a href="#contact">যোগাযোগ</a>
+      <a href="#home">হোম</a><a href="catalog.html">স্মার্ট ক্যাটালগ</a><a href="#categories">ক্যাটাগরি</a><a href="#products">পণ্যসমূহ</a><a href="#about">আমাদের সম্পর্কে</a><a href="#contact">যোগাযোগ</a>
     </nav>
     <div class="header-actions"><button class="icon-btn" id="cartToggle" aria-label="কার্ট">🛒 <span id="cartCount">0</span></button><button class="menu-btn" id="menuToggle">☰</button><a class="btn btn-small" href="#contact">পাইকারি কোটেশন</a></div>
   </header>
@@ -29,7 +29,7 @@
         <div class="eyebrow"><span></span> SMART WHOLESALE · BETTER BUSINESS</div>
         <h1>আপনার ব্যবসার জন্য<br><em>স্মার্ট ইলেকট্রনিক্স</em></h1>
         <p>লাইট বাল্ব, বৈদ্যুতিক তার, সুইচ, সকেট, ফ্যান, টুলস, সোলার, CCTV, অডিও, হোম অ্যাপ্লায়েন্সসহ ১৫০ ধরনের পণ্য পাইকারি অর্ডার করুন। মোবাইল ফোন বিক্রি করা হয় না।</p>
-        <div class="hero-buttons"><a class="btn" href="#products">পণ্য দেখুন <span>↗</span></a><a class="btn btn-ghost" href="#contact">দাম জানতে যোগাযোগ</a></div>
+        <div class="hero-buttons"><a class="btn" href="catalog.html">স্মার্ট ক্যাটালগ খুলুন <span>↗</span></a><a class="btn btn-ghost" href="#contact">দাম জানতে যোগাযোগ</a></div>
         <div class="trust-row"><div><b>৳</b><span>পাইকারি মূল্য</span></div><div><b>✓</b><span>মান যাচাই করা পণ্য</span></div><div><b>↗</b><span>সহজ অর্ডার</span></div></div>
       </div>
       <div class="hero-visual">
@@ -55,7 +55,7 @@
     </section>
 
     <section class="section products-section" id="products">
-      <div class="section-heading"><div><div class="eyebrow">WHOLESALE COLLECTION</div><h2>পাইকারি <em>পণ্য ক্যাটালগ</em></h2></div><div class="product-tools"><input id="searchInput" type="search" placeholder="পণ্য খুঁজুন..."><select id="sortSelect" aria-label="পণ্য সাজান"><option value="default">ডিফল্ট</option><option value="low">কম দাম আগে</option><option value="high">বেশি দাম আগে</option></select></div></div>
+      <div class="catalog-toolbar"><button class="btn btn-ghost" id="backToCategories" type="button">← ক্যাটাগরিতে ফিরুন</button><a class="btn btn-ghost" href="index.html">⌂ হোম</a></div><div class="section-heading"><div><div class="eyebrow">WHOLESALE COLLECTION</div><h2>পাইকারি <em id="selectedCategoryTitle">পণ্য ক্যাটালগ</em></h2></div><div class="product-tools"><input id="searchInput" type="search" placeholder="পণ্য খুঁজুন..."><select id="sortSelect" aria-label="পণ্য সাজান"><option value="default">ডিফল্ট</option><option value="low">কম দাম আগে</option><option value="high">বেশি দাম আগে</option></select></div></div>
       <div class="notice">১০০টির বেশি নয়, এখানে ১৫০টি পণ্য ১৫টি ক্যাটাগরিতে সাজানো হয়েছে। মোবাইল ফোন রাখা হয়নি। প্রদর্শিত দাম নমুনা, চূড়ান্ত পাইকারি মূল্য অর্ডারের পরিমাণ ও স্টক অনুযায়ী WhatsApp-এ নিশ্চিত হবে।</div><p class="catalog-count" id="productCount" aria-live="polite"></p>
       <div class="product-grid" id="productGrid"></div>
     </section>
