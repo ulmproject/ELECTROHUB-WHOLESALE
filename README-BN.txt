@@ -1,0 +1,28 @@
+ElectroHub Wholesale Website | Professional Edition
+====================================================
+
+আপনার ওয়েবসাইটে যোগাযোগের নম্বর যুক্ত করা হয়েছে:
+ফোন / WhatsApp / IMO নম্বর: 01975805326
+WhatsApp অর্ডার লিংক: https://wa.me/8801975805326
+IMO: IMO অ্যাপ খুলে 01975805326 নম্বরে সার্চ/যোগাযোগ করুন।
+
+চালানোর নিয়ম
+1. ZIP Extract করুন।
+2. index.html ফাইলটি ব্রাউজারে খুলুন অথবা GitHub Pages/যেকোনো static hosting-এ আপলোড করুন।
+3. পণ্যের নাম, দাম ও বিবরণ পরিবর্তন করতে script.js-এর products তালিকা সম্পাদনা করুন।
+4. রং ও লেআউট পরিবর্তন করতে style.css সম্পাদনা করুন।
+
+উন্নত করা হয়েছে
+- Contact section-এ ফোন, WhatsApp এবং IMO যোগাযোগের তথ্য
+- Floating quick-contact buttons
+- WhatsApp quote form এবং cart order-এ আপনার নম্বর কনফিগার
+- SEO description, social preview metadata ও keyboard focus styling
+- Mobile layout refinement এবং reduced-motion accessibility
+
+গুরুত্বপূর্ণ সীমাবদ্ধতা
+- WhatsApp লিংক সরাসরি আপনার নম্বরে chat খুলবে।
+- IMO-এর নির্ভরযোগ্য public direct-chat URL/IMO ID দেওয়া হয়নি। তাই IMO বাটন IMO অ্যাপ/সাইট খুলবে; ব্যবহারকারীকে 01975805326 নম্বর দিয়ে খুঁজতে হবে।
+- পণ্যের দামগুলো নমুনা মূল্য, প্রকৃত পাইকারি মূল্য নয়।
+- এটি frontend website। Customer account, cloud database, admin dashboard, payment gateway,
+  inventory sync এবং order tracking এখনো যুক্ত নয়। এগুলোর জন্য secure backend প্রয়োজন।
+- Google Fonts ব্যবহারে ইন্টারনেট প্রয়োজন; মূল পেজের অন্যান্য অংশ staticভাবে কাজ করবে।
