@@ -20,3 +20,16 @@
 .btn:focus-visible,.icon-btn:focus-visible,.menu-btn:focus-visible{outline-offset:4px}
 @media(max-width:760px){.quick-contact{right:12px;bottom:12px}.quick-contact a{padding:11px 14px}.contact-details a{max-width:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* Expanded wholesale catalogue */
+.product-photo{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+.product-art{isolation:isolate;background:#eef3fa}
+.product-art:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,#ffffff22,#dce7f755);z-index:1;pointer-events:none}
+.product-emoji{position:relative;z-index:2;font-size:68px}
+.product-badge{z-index:3;background:#10254c;color:#fff}
+.product-meta{display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;color:#8792a5;font-size:11px;margin:0 0 10px}
+.product-info h3{min-height:28px}
+.catalog-count{margin:-12px 0 18px;color:#526077;font-weight:700;font-size:14px}
+.category-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media(max-width:1000px){.category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
