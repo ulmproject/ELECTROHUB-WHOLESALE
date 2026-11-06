@@ -57,3 +57,11 @@
 @media(max-width:1050px){.product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}}
 @media(max-width:700px){.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.product-info{padding:11px!important}.product-info h3{font-size:15px;min-height:42px}.product-meta{font-size:10px}.product-badge{font-size:9px;top:8px;left:8px;padding:5px 8px}.image-search-link{font-size:10px;padding:5px 8px}.price-row button{padding:8px 10px}}
 @media(max-width:360px){.product-grid{grid-template-columns:1fr}}
+
+/* Smart multi-channel contact enhancements */
+.email-symbol{background:linear-gradient(135deg,#315cff,#7049d8)}
+.quote-form select{width:100%;border:1px solid var(--line);border-radius:9px;padding:11px;background:#fff;color:var(--ink);outline:none}
+.quote-form select:focus{border-color:#8ba4ff}
+.quick-email{background:#315cff}
+.quick-contact{flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:420px){.quick-contact{gap:6px}.quick-contact a{padding:10px 12px;font-size:11px}}
